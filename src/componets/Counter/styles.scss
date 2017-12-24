@@ -1,0 +1,20 @@
+@import '../../theme/palette';
+$post: url('../../theme/assets/post.png');
+
+.counter {
+  position: relative;
+  color: #365899;
+  box-sizing: border-box;
+
+  &:after{
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: -35px;
+    width: 30px;
+    height: 30px;
+    background-image: $post;
+    background-repeat: no-repeat;
+    background-size: 30px;
+  }
+}

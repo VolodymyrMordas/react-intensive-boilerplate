@@ -2,8 +2,14 @@
 import React, { Component } from 'react';
 
 // Instruments
-import Styles from './styles';
-import moment from 'moment';
+import avatar from '../../theme/assets/volodymyr-mordas.jpg';
+import Feed from '../../componets/Feed';
+
+const options = {
+    avatar,
+    firstName: 'Volodymyr',
+    lastName:  'Mordas'
+};
 
 export default class App extends Component {
 
@@ -11,10 +17,7 @@ export default class App extends Component {
 
     render () {
         return (
-            <section className = { Styles.app }>
-                <h1>Welcome!</h1>
-                <p>It is {moment().format('MMMM D h:mm:ss a')}.</p>
-            </section>
+            <Feed { ...options } />
         );
     }
 }

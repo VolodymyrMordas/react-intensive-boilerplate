@@ -1,0 +1,75 @@
+@import '../../theme/palette';
+
+.composer    {
+    opacity: 1;
+    transform: matrix(1, 0, 0, 1, 0, 0);
+    display: flex;
+    position: relative;
+    width: 500px;
+    height: 130px;
+    margin-bottom: 10px;
+    padding: 12px;
+    border: 1px solid #d9d9d9;
+    border-radius: 3px;
+    background-color: #FFF;
+
+    img {
+        width: 40px;
+        height: 40px;
+        margin-right: 15px;
+        transition: border .5s ease;
+        border: 1px solid #90949C;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    form{
+        width: auto;
+        overflow: hidden;
+    }
+
+
+    textarea{
+        z-index: auto;
+        position: relative;
+        background: transparent !important;
+        transition: font-size .5s ease;
+        width: 410px;
+        height: 80px;
+        margin-top: 7px;
+        border: 0;
+        outline: 0;
+        font-weight: 300;
+        resize: none;
+        overflow: auto;
+        font-family: sans-serif;
+        font-size: 14px;
+        line-height: 1.15;
+
+        &:focus {
+            font-size: 24px;
+        }
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+
+    input{
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        width: 58px;
+        height: 22px;
+        padding-top: 3px;
+        transition: background-color .2s ease-in;
+        border: 0;
+        border-radius: 2px;
+        outline: 0;
+        background-color: #4267B2;
+        color: #FFF;
+        font-size: 12px;
+        letter-spacing: 1px;
+        cursor: pointer;
+    }
+}
