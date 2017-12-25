@@ -8,14 +8,14 @@ import PropTypes from 'prop-types';
 
 export default class Post extends Component {
 
-    static propTypes = {
+    static contextTypes = {
         avatar:    PropTypes.string.isRequired,
         firstName: PropTypes.string.isRequired,
         lastName:  PropTypes.string.isRequired
     };
 
     render () {
-        const { avatar, firstName, lastName } = this.props;
+        const { avatar, firstName, lastName } = this.context;
 
 
         return (
