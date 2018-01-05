@@ -8,4 +8,37 @@
   min-height: 100vh;
   padding: 15px;
   background-color: $paletteColor3;
+
+  .initialAppearStart {
+    opacity: 0.01;
+    transform: translateY(-300px) scale(2);
+  }
+
+  .initialAppearEnd {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: opacity 2500ms ease-in, transform 2500ms ease-in;
+  }
+
+  .inStart {
+    opacity: 0.01;
+    transform: translateX(-1000px) scale(2);
+  }
+
+  .inEnd {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    transition: opacity 2500ms ease-in, transform 2500ms ease-in;
+  }
+
+  .outStart {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+
+  .outEnd {
+    opacity: 0.01;
+    transform: translateX(-1000px) scale(2);
+    transition: opacity 2500ms ease-out, transform 2500ms ease-out;
+  }
 }
