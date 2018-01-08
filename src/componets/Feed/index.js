@@ -8,17 +8,12 @@ import Postment from '../Postmen';
 import { Transition, TransitionGroup } from 'react-transition-group';
 import { fromTo, Power2, TweenLite, Back } from 'gsap';
 import { string } from 'prop-types';
-import PropTypes from 'prop-types';
 
 export default class Feed extends Component {
 
     static contextTypes = {
         api:   string.isRequired,
         token: string.isRequired
-    };
-
-    static childContextTypes = {
-        likePost: PropTypes.func
     };
 
     state = {
@@ -35,12 +30,15 @@ export default class Feed extends Component {
     componentDidMount () {
         this.fetchPosts();
 
-        this.interval = setInterval(this.fetchPosts(), 5000);
+        this.interval = setInterval(() => {
+            this.fetchPosts();
+        }, 5000);
     }
 
-    componentWillUpdate (_, { posts }) {
-        this.savePostToLocaStorege(posts);
-    }
+    // componentWillUpdate (_, { posts }) {
+    //     console.log('component will update');
+    //     this.savePostToLocaStorege(posts);
+    // }
 
     componentWillUnmout () {
         this.clearInterval(this.interval);
@@ -69,7 +67,6 @@ export default class Feed extends Component {
     };
 
     createPost = (post) => {
-        // this.setState(({ posts }) => ({ posts: [post, ...posts]}));
         try {
             const { api, token } = this.context;
 
@@ -88,8 +85,10 @@ export default class Feed extends Component {
                 }
 
                 return response.json();
-            }).then(() => {
-                this.fetchPosts();
+            }).then((p) => {
+                const { data } = p;
+
+                this.setState(({ posts }) => ({ posts: [data, ...posts]}));
             });
         } catch (error) {
             console.log(error);
@@ -116,13 +115,9 @@ export default class Feed extends Component {
         });
     };
 
-    getChildContext () {
-        return { likePost };
-    }
-
-    savePostToLocaStorege = (posts) => {
-        localStorage.setItem('posts', JSON.stringify(posts));
-    };
+    // savePostToLocaStorege = (posts) => {
+    //     localStorage.setItem('posts', JSON.stringify(posts));
+    // };
 
     handlePostAppear = (post) => {
         fromTo(post, 0.628,
@@ -174,7 +169,41 @@ export default class Feed extends Component {
     };
 
     likePost = (id) => {
-        console.log(`likedpost:${id}`);
+        const { api, token } = this.context;
+
+        fetch(`${api}/${id}`, {
+            method:  'PUT',
+            headers: {
+                'Content-Type':  'application/json',
+                'Authorization': token
+            }
+        }).then((response) => {
+            if (response.status !== 200) {
+                throw new Error(`error:`);
+            }
+
+            return response.json();
+        }).then((post) => {
+            console.log(post);
+            // const { data } = post;
+
+            // this.setState(({ posts }) => {
+            //     posts.filter((item) => item.id === data.id).likes = data.likes;
+            //
+            //     return { posts };
+            // });
+
+            // this.setState(({ posts }) => {
+            //     console.log(posts);
+            //
+            //     return { posts: [data, ...posts]};
+            // });
+
+            this.fetchPosts();
+
+        }).catch((error) => {
+            console.log(error);
+        });
     };
 
     render () {
@@ -188,7 +217,7 @@ export default class Feed extends Component {
                 timeout = { 314 }
                 onEnter = { this.handlePostAppear }
                 onExit = { this.handlePostDisappear }>
-                <Post key = { post.id } { ...post } removePost = { this.removePost } likePost = { this.likePost } />
+                <Post key = { post.id } { ...post } likePost = { this.likePost } removePost = { this.removePost } />
             </Transition>)
         );
 

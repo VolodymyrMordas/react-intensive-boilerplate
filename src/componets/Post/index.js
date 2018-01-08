@@ -15,6 +15,8 @@ export default class Post extends Component {
         firstName:  PropTypes.string.isRequired,
         id:         PropTypes.string.isRequired,
         lastName:   PropTypes.string.isRequired,
+        likePost:   PropTypes.func,
+        likes:      PropTypes.array,
         removePost: PropTypes.func
     };
 
@@ -24,8 +26,14 @@ export default class Post extends Component {
         removePost(id);
     };
 
+    handleLikePost = () => {
+        const { id, likePost } = this.props;
+
+        likePost(id);
+    };
+
     render () {
-        const { avatar, firstName, lastName, comment, created } = this.props;
+        const { avatar, firstName, lastName, comment, created, likes } = this.props;
 
         return (
             <section className = { Styles.post }>
@@ -34,7 +42,7 @@ export default class Post extends Component {
                 <a>{firstName} {lastName}</a>
                 <time>{moment(created).format('MMMM D h:mm:ss a')}</time>
                 <p>{comment}</p>
-                <Like />
+                <Like likePost = { this.handleLikePost } likes = { likes } />
             </section>);
     }
 }

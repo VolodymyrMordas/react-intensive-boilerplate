@@ -10,8 +10,8 @@ const GROUP_ID = 'sn8x1osnm1';
 const TOKEN = 'hpat31rqpx';
 
 const options = {
-    api:       `https://lab.lectrum.io/react/api/${GROUP_ID}`,
     avatar,
+    api:       `https://lab.lectrum.io/react/api/${GROUP_ID}`,
     firstName: 'Volodymyr',
     lastName:  'Mordas',
     token:     TOKEN
@@ -21,10 +21,10 @@ export default class App extends Component {
 
     static childContextTypes = {
         api:       string.isRequired,
+        token:     string.isRequired,
         avatar:    string.isRequired,
         firstName: string.isRequired,
-        lastName:  string.isRequired,
-        token:     string.isRequired
+        lastName:  string.isRequired
     };
 
     getChildContext () {
