@@ -1,11 +1,19 @@
 // Core
 import React from 'react';
-import ReactDOM from 'react-dom';
-
+import { Provider } from 'react-redux';
+import { render } from 'react-dom';
 // Instruments
 import './theme/reset.css';
 
-// App
+// Instruments
+import store from './store';
+
+//Components
 import App from './containers/App';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+render(
+    <Provider store = { store } >
+        <App />
+    </Provider>,
+    document.getElementById('root'),
+);

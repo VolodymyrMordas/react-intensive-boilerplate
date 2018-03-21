@@ -1,23 +1,31 @@
 import React, { Component } from 'react';
 
 import Styles from './styles.scss';
+// import PropTypes from 'prop-types';
+
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-export default class Postment extends Component {
-    static contextTypes = {
-        avatar:    PropTypes.string.isRequired,
-        firstName: PropTypes.string.isRequired,
-        lastName:  PropTypes.string.isRequired
+class Postment extends Component {
+
+    static propTypes = {
+        profile: PropTypes.object.isRequired
     };
 
     render () {
-        const { avatar, firstName } = this.context;
+        const { profile } = this.props;
 
         return (
             <section className = { Styles.postmen }>
-                <img src = { avatar } />
-                <span>Welcome online, {firstName}!</span>
+                <img src = { profile.avatar } />
+                <span>Welcome online, {profile.firstName}!</span>
             </section>
         );
     }
 }
+
+const mapStateToProps = (state) => ({
+    profile: state.profile
+});
+
+export default connect(mapStateToProps)(Postment);

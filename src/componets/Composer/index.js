@@ -1,72 +1,94 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+
+import { connect } from 'react-redux';
 
 import Styles from './styles.scss';
-import { getUniqueID } from '../../helpers';
 
-export default class Composer extends Component {
+//Instruments
+import { createPost } from '../../actions/posts';
 
-    static contextTypes = {
-        avatar:    PropTypes.string.isRequired,
-        firstName: PropTypes.string.isRequired,
-        lastName:  PropTypes.string.isRequired
-    };
+class Composer extends Component {
+
 
     static propTypes = {
-        createPost: PropTypes.func.isRequired
+        avatar:     PropTypes.string.isRequired,
+        createPost: PropTypes.func.isRequired,
+        firstName:  PropTypes.string.isRequired
     };
 
-    state = {
-        comment: ''
-    };
+    constructor (props) {
+        super(props);
+        this.state = {
+            comment: ''
+        };
+    }
 
-    handleSubmit = (event) => {
+    /**
+     * handle on submit action
+     *
+     * @param {Object} event event
+     * @return {void}
+     */
+    _submit = (event) => {
         event.preventDefault();
-        this.publishPost();
-    };
 
-    publishPost = () => {
+        const { createPost: createPostAction } = this.props;
         const { comment } = this.state;
 
-        if (comment === '') {
-            return;
-        }
-
-        this.props.createPost({
-            comment,
-            id:      getUniqueID(),
-            created: moment().unix()
-        });
-
-        this.setState({
-            comment: ''
-        });
+        createPostAction(comment);
     };
 
-    handleOnTextareaChange = (event) => {
+    /**
+     * handle on textarea changed
+     *
+     * @param {Object} event event
+     * @return {void}
+     */
+    _onTextareaChange = (event) => {
         this.setState({
             comment: event.target.value
         });
     };
 
-    onCtrlEnterPress = (event) => {
+    /**
+     * handle ctrl+enter keys pressed
+     *
+     * @param {Object} event event
+     * @return {void}
+     */
+    _onCtrlEnterPress = (event) => {
         if (event.ctrlKey && event.key === 'Enter') {
             this.publishPost();
         }
     };
 
     render () {
-        const { firstName, avatar } = this.context;
+        const { firstName, avatar } = this.props;
 
         return (
             <section className = { Styles.composer }>
                 <img src = { avatar } />
-                <form onSubmit = { this.handleSubmit }>
-                    <textarea placeholder = { `Whats on your mind, ${firstName}!` } value = { this.state.comment } onChange = { this.handleOnTextareaChange } onKeyPress = { this.onCtrlEnterPress } />
+                <form onSubmit = { this._submit }>
+                    <textarea
+                        placeholder = { `Whats on your mind, ${firstName}!` }
+                        value = { this.state.comment }
+                        onChange = { this._onTextareaChange }
+                        onKeyPress = { this._onCtrlEnterPress }
+                    />
                     <input type = 'submit' value = 'Post' />
                 </form>
             </section>
         );
     }
 }
+
+const mapStateToProps = (state) => ({
+    profile: state.profile
+});
+
+const mapDispatchToProps = {
+    createPost
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Composer);

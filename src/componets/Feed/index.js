@@ -1,4 +1,6 @@
+//Core
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import Styles from './styles.scss';
 import Composer from '../Composer';
@@ -7,116 +9,57 @@ import Counter from '../Counter';
 import Postment from '../Postmen';
 import { Transition, TransitionGroup } from 'react-transition-group';
 import { fromTo, Power2, TweenLite, Back } from 'gsap';
-import { string } from 'prop-types';
 
-export default class Feed extends Component {
+import { connect } from 'react-redux';
 
-    static contextTypes = {
-        api:   string.isRequired,
-        token: string.isRequired
+import { bindActionCreators } from 'redux';
+
+// Instruments
+import {
+    // createPost, deletePost,
+    fetchPosts } from '../../actions/posts';
+
+class Feed extends Component {
+
+    static propTypes = {
+        posts:      PropTypes.array.isRequired,
+        profile:    PropTypes.object.isRequired,
+        fetchPosts: PropTypes.func
     };
-
-    state = {
-        posts: [],
-        show:  true
-    };
-
-    componentWillMount () {
-        const posts = JSON.parse(localStorage.getItem('posts') || '[]');
-
-        this.setState({ posts });
-    }
 
     componentDidMount () {
-        this.fetchPosts();
+        const { fetchPosts: fetchPostAction } = this.props;
 
-        this.interval = setInterval(() => {
-            this.fetchPosts();
-        }, 5000);
+        fetchPostAction();
+        this.interval = setInterval(fetchPostAction, 5000);
     }
 
-    // componentWillUpdate (_, { posts }) {
-    //     console.log('component will update');
-    //     this.savePostToLocaStorege(posts);
-    // }
-
-    componentWillUnmout () {
-        this.clearInterval(this.interval);
+    componentWillUnmount () {
+        clearInterval(this.interval);
     }
 
-    fetchPosts = () => {
-        try {
-            const { api } = this.context;
 
-            fetch(api, {
-                method: 'GET'
-            }).then((response) => {
-                if (response.status !== 200) {
-                    throw new Error(`error:${response.message}`);
-                }
-
-                return response.json();
-            }).then(({ data : posts }) => {
-                this.setState(() => ({
-                    posts
-                }));
-            });
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    createPost = (post) => {
-        try {
-            const { api, token } = this.context;
-
-            const { comment } = post;
-
-            fetch(api, {
-                method:  'POST',
-                headers: {
-                    'Content-Type':  'application/json',
-                    'Authorization': token
-                },
-                body: JSON.stringify({ comment })
-            }).then((response) => {
-                if (response.status !== 200) {
-                    throw new Error(`error:${response.message}`);
-                }
-
-                return response.json();
-            }).then((p) => {
-                const { data } = p;
-
-                this.setState(({ posts }) => ({ posts: [data, ...posts]}));
-            });
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    removePost = (id) => {
-
-        const { api, token } = this.context;
-
-        fetch(`${api}/${id}`, {
-            method:  'DELETE',
-            headers: {
-                'Content-Type':  'application/json',
-                'Authorization': token
-            }
-        }).then((response) => {
-            if (response.status !== 204) {
-                throw new Error(`error:`);
-            }
-            this.fetchPosts();
-        }).catch((error) => {
-            console.log(error);
-        });
-    };
-
-    // savePostToLocaStorege = (posts) => {
-    //     localStorage.setItem('posts', JSON.stringify(posts));
+    //
+    // // _createPost = () => this.props.actions.createPost();
+    //
+    // removePost = (id) => {
+    //
+    //     const { api, token } = this.context;
+    //
+    //     fetch(`${api}/${id}`, {
+    //         method:  'DELETE',
+    //         headers: {
+    //             'Content-Type':  'application/json',
+    //             'Authorization': token
+    //         }
+    //     }).then((response) => {
+    //         if (response.status !== 204) {
+    //             throw new Error(`error:`);
+    //         }
+    //         this.fetchPosts();
+    //     }).catch((error) => {
+    //         console.log(error);
+    //     });
     // };
 
     handlePostAppear = (post) => {
@@ -168,66 +111,30 @@ export default class Feed extends Component {
             });
     };
 
-    likePost = (id) => {
-        const { api, token } = this.context;
-
-        fetch(`${api}/${id}`, {
-            method:  'PUT',
-            headers: {
-                'Content-Type':  'application/json',
-                'Authorization': token
-            }
-        }).then((response) => {
-            if (response.status !== 200) {
-                throw new Error(`error:`);
-            }
-
-            return response.json();
-        }).then((post) => {
-            console.log(post);
-            // const { data } = post;
-
-            // this.setState(({ posts }) => {
-            //     posts.filter((item) => item.id === data.id).likes = data.likes;
-            //
-            //     return { posts };
-            // });
-
-            // this.setState(({ posts }) => {
-            //     console.log(posts);
-            //
-            //     return { posts: [data, ...posts]};
-            // });
-
-            this.fetchPosts();
-
-        }).catch((error) => {
-            console.log(error);
-        });
-    };
-
     render () {
+        const { posts : postData, profile } = this.props;
 
-        const { posts } = this.state;
-
-        const postList = posts.map((post) => (
+        const posts = postData.map((props) => (
             <Transition
                 appear
-                key = { post.id }
+                key = { props.id }
                 timeout = { 314 }
                 onEnter = { this.handlePostAppear }
                 onExit = { this.handlePostDisappear }>
-                <Post key = { post.id } { ...post } likePost = { this.likePost } removePost = { this.removePost } />
+                <Post
+                    { ...props }
+                    removePost = { this.removePost }
+                />
             </Transition>)
         );
 
         return (
             <section className = { Styles.feed }>
-                <Composer createPost = { this.createPost } />
+                <Composer { ...profile } />
                 <Counter count = { posts.length } />
                 <div>
                     <TransitionGroup>
-                        {postList}
+                        {posts}
                     </TransitionGroup>
                 </div>
                 <Transition
@@ -243,3 +150,16 @@ export default class Feed extends Component {
         );
     }
 }
+
+const mapStateToProps = (state) => ({
+    profile: state.profile,
+    posts:   state.posts
+});
+
+const mapDispatchToProps =
+    (dispatch) =>
+        bindActionCreators({
+            fetchPosts
+        }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Feed);

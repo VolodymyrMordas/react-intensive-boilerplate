@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import Styles from './styles.scss';
 import PropTypes from 'prop-types';
+// import { likePost } from '../../actions/posts';
+
+// import { connect } from 'react-redux';
+// import { bindActionCreators } from 'redux';
 
 export default class Like extends Component {
 
     static propTypes = {
         likePost: PropTypes.func,
         likes:    PropTypes.array
-    };
-
-    static contextTypes = {
-        firstName: PropTypes.string,
-        lastName:  PropTypes.string
     };
 
     /**
@@ -46,12 +45,23 @@ export default class Like extends Component {
 
         const iLike = likes.some(({ firstName, lastName }) => firstName === fn && lastName === ln);
 
-
         return (
             <section className = { Styles.like } >
-                <span className = { iLike ? Styles.likedButton : Styles.likeButton } onClick = { likePost }>Like</span>
+                <span
+                    className = { iLike ? Styles.likedButton : Styles.likeButton }
+                    onClick = { likePost }>Like</span>
                 {likes.length > 0 ? <div><span>{likes.length} {this.renderLikePanel(likes)}</span></div> : ''}
             </section>);
 
     }
 }
+
+// const mapStateToProps = (state) => state;
+
+// const mapDispatchToProps =
+//     (dispatch) =>
+//         bindActionCreators({
+//             likePost
+//         }, dispatch);
+//
+// export default connect(mapStateToProps)(Like);
