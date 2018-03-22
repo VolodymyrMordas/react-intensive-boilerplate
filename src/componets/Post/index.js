@@ -29,12 +29,21 @@ class Post extends Component {
         profile:    PropTypes.object.isRequired
     };
 
+    /**
+     *
+     * @return {void}
+     */
     _deletePost = () => {
         const { id, deletePost: deletePostAction } = this.props;
 
         deletePostAction(id);
     };
 
+    /**
+     *
+     * @private
+     * @return {void}
+     */
     _likePost = () => {
         const { likePost: likePostAction, id } = this.props;
 
