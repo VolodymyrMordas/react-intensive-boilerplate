@@ -1,5 +1,8 @@
 // Instruments
-import { CREATE_POST, CREATE_POST_FAIL, DELETE_POST, FETCH_POSTS, LIKE_POST, LIKE_POST_FAIL } from './type';
+import {
+    CREATE_POST, CREATE_POST_FAIL, DELETE_POST, DELETE_POST_FAIL, FETCH_POSTS, LIKE_POST,
+    LIKE_POST_FAIL
+} from './type';
 
 export const createPost = (msg) => async (dispatch, getState) => {
     const { api, token } = getState().profile;
@@ -21,17 +24,16 @@ export const createPost = (msg) => async (dispatch, getState) => {
 
     const { data } = await response.json();
 
-    console.log(data);
-    // dispatch({
-    //     type:    CREATE_POST,
-    //     payload: data
-    // });
+    dispatch({
+        type:    CREATE_POST,
+        payload: data
+    });
 };
 
 /**
  *
- * @param {string} id
- * @returns {function(*, *)}
+ * @param {string} id - post id
+ * @returns {function(*, *)} delete post action creator
  */
 export const deletePost = (id) => async (dispatch, getState) => {
     const { api, token } = getState().profile;
@@ -44,10 +46,26 @@ export const deletePost = (id) => async (dispatch, getState) => {
     });
 
     if (response.status !== 200) {
-        throw new Error(`error:${response.message}`);
+        const { message } = await response.json();
+
+        dispatch({
+            type:    DELETE_POST_FAIL,
+            payload: message
+        });
+
+    } else {
+        dispatch({
+            type:    DELETE_POST,
+            payload: id
+        });
     }
 };
 
+/**
+ * fetch post action creator
+ *
+ * @return {function(*, *)} fetch post action creator
+ */
 export const fetchPosts = () => async (dispatch, getState) => {
     const { api } = getState().profile;
 
@@ -67,10 +85,17 @@ export const fetchPosts = () => async (dispatch, getState) => {
     });
 };
 
-export const likePost = (postId) => async (dispatch, getState) => {
+/**
+ * like/dislike post action creator
+ *
+ * @param {string} id - post id
+ *
+ * @return {function(*, *)} action creator
+ */
+export const likePost = (id) => async (dispatch, getState) => {
     const { api, token } = getState().profile;
 
-    const response = await fetch(`${api}/${postId}`, {
+    const response = await fetch(`${api}/${id}`, {
         method:  'PUT',
         headers: {
             'Content-Type':  'application/json',
@@ -81,12 +106,11 @@ export const likePost = (postId) => async (dispatch, getState) => {
     if (response.status !== 200) {
         dispatch({
             type:    LIKE_POST_FAIL,
-            payload: postId
+            payload: id
         });
-        throw new Error(`error:${response.message}`);
     }
 
     const { data } =  await response.json();
 
-    dispatch({ type: LIKE_POST, payload: { postId, data }});
+    dispatch({ type: LIKE_POST, payload: { postId: id, data }});
 };
