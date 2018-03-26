@@ -15,54 +15,28 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 // Instruments
-import {
-    // createPost, deletePost,
-    fetchPosts } from '../../actions/posts';
+import postsActions from '../../actions/posts/index';
 
 class Feed extends Component {
 
     static propTypes = {
-        posts:      PropTypes.array.isRequired,
-        profile:    PropTypes.object.isRequired,
-        fetchPosts: PropTypes.func
+        posts:   PropTypes.array.isRequired,
+        profile: PropTypes.object.isRequired
     };
 
     componentDidMount () {
-        const { fetchPosts: fetchPostAction } = this.props;
-
-        fetchPostAction();
-        this.interval = setInterval(fetchPostAction, 5000);
+        this.interval = setInterval(this._fetchPosts(), 5000);
     }
 
     componentWillUnmount () {
         clearInterval(this.interval);
     }
 
+    _fetchPosts = () => {
+        this.props.actions.fetchPosts();
+    };
 
-    //
-    // // _createPost = () => this.props.actions.createPost();
-    //
-    // removePost = (id) => {
-    //
-    //     const { api, token } = this.context;
-    //
-    //     fetch(`${api}/${id}`, {
-    //         method:  'DELETE',
-    //         headers: {
-    //             'Content-Type':  'application/json',
-    //             'Authorization': token
-    //         }
-    //     }).then((response) => {
-    //         if (response.status !== 204) {
-    //             throw new Error(`error:`);
-    //         }
-    //         this.fetchPosts();
-    //     }).catch((error) => {
-    //         console.log(error);
-    //     });
-    // };
-
-    handlePostAppear = (post) => {
+    _handlePostAppear = (post) => {
         fromTo(post, 0.628,
             {
                 opacity: 0.01
@@ -77,7 +51,7 @@ class Feed extends Component {
             });
     };
 
-    handlePostDisappear = (post) => {
+    _handlePostDisappear = (post) => {
         fromTo(post, 0.628,
             {
                 opacity:   1,
@@ -92,17 +66,17 @@ class Feed extends Component {
             });
     };
 
-    handlePostmanAppear = (postment) => {
+    _handlePostmanAppear = (postment) => {
         TweenLite.to(postment, 2.5, {
             ease:       Back.easeOut.config(1.7),
             x:          -300,
             onComplete: () => {
-                this.handlePostmanDisappear(postment);
+                this._handlePostmanDisappear(postment);
             }
         });
     };
 
-    handlePostmanDisappear = (postment) => {
+    _handlePostmanDisappear = (postment) => {
         TweenLite.to(postment, 2.5,
             {
                 delay: 2,
@@ -114,15 +88,15 @@ class Feed extends Component {
     render () {
         const { posts : postData, profile } = this.props;
 
-        const posts = postData.map((props) => (
+        const posts = postData.map((post) => (
             <Transition
                 appear
-                key = { props.id }
+                key = { post.id }
                 timeout = { 314 }
-                onEnter = { this.handlePostAppear }
-                onExit = { this.handlePostDisappear }>
+                onEnter = { this._handlePostAppear }
+                onExit = { this._handlePostDisappear }>
                 <Post
-                    { ...props }
+                    { ...post }
                     removePost = { this.removePost }
                 />
             </Transition>)
@@ -142,8 +116,8 @@ class Feed extends Component {
                     in
                     unmountOnExit
                     timeout = { 314 }
-                    onEnter = { this.handlePostmanAppear }
-                    onExit = { this.handlePostmanDisappear } >
+                    onEnter = { this._handlePostmanAppear }
+                    onExit = { this._handlePostmanDisappear } >
                     <Postment />
                 </Transition>
             </section>
@@ -151,15 +125,15 @@ class Feed extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    profile: state.profile,
-    posts:   state.posts
+const mapStateToProps = ({ posts: { data, isFetching, error }, profile }) => ({
+    profile,
+    posts: data,
+    isFetching,
+    error
 });
 
-const mapDispatchToProps =
-    (dispatch) =>
-        bindActionCreators({
-            fetchPosts
-        }, dispatch);
+const mapDispatchToProps = (dispatch) => ({
+    actions: bindActionCreators({ ...postsActions }, dispatch)
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Feed);

@@ -6,15 +6,16 @@ import { connect } from 'react-redux';
 import Styles from './styles.scss';
 
 //Instruments
-import { createPost } from '../../actions/posts';
+import { bindActionCreators } from 'redux';
+import postsActions from '../../actions/posts';
 
 class Composer extends Component {
 
 
     static propTypes = {
-        avatar:     PropTypes.string.isRequired,
-        createPost: PropTypes.func.isRequired,
-        firstName:  PropTypes.string.isRequired
+        avatar:    PropTypes.string.isRequired,
+        // createPost: PropTypes.func.isRequired,
+        firstName: PropTypes.string.isRequired
     };
 
     constructor (props) {
@@ -33,10 +34,9 @@ class Composer extends Component {
     _submit = (event) => {
         event.preventDefault();
 
-        const { createPost: createPostAction } = this.props;
         const { comment } = this.state;
 
-        createPostAction(comment);
+        this.props.actions.createPost(comment);
     };
 
     /**
@@ -87,8 +87,8 @@ const mapStateToProps = (state) => ({
     profile: state.profile
 });
 
-const mapDispatchToProps = {
-    createPost
-};
+const mapDispatchToProps = (dispatch) => ({
+    actions: bindActionCreators({ ...postsActions }, dispatch)
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Composer);

@@ -16,7 +16,7 @@ export default class Like extends Component {
     /**
      * render like panel
      *
-     * @param {array} likes - array of post's likes
+     * @param {array} likes - array of posts's likes
      * @returns {*} - rendered likes panel
      */
     renderLikePanel = (likes) => {

@@ -12,21 +12,20 @@ import moment from 'moment';
 import Like from '../Like';
 
 //instruments
-import { likePost, deletePost } from '../../actions/posts';
+
+import postsActions from '../../actions/posts';
 
 class Post extends Component {
 
     static propTypes = {
-        avatar:     PropTypes.string.isRequired,
-        comment:    PropTypes.string.isRequired,
-        created:    PropTypes.number.isRequired,
-        deletePost: PropTypes.func.isRequired,
-        firstName:  PropTypes.string.isRequired,
-        id:         PropTypes.string.isRequired,
-        lastName:   PropTypes.string.isRequired,
-        likePost:   PropTypes.func.isRequired,
-        likes:      PropTypes.array.isRequired,
-        profile:    PropTypes.object.isRequired
+        avatar:    PropTypes.string.isRequired,
+        comment:   PropTypes.string.isRequired,
+        created:   PropTypes.number.isRequired,
+        firstName: PropTypes.string.isRequired,
+        id:        PropTypes.string.isRequired,
+        lastName:  PropTypes.string.isRequired,
+        likes:     PropTypes.array.isRequired,
+        profile:   PropTypes.object.isRequired
     };
 
     /**
@@ -34,9 +33,9 @@ class Post extends Component {
      * @return {void}
      */
     _deletePost = () => {
-        const { id, deletePost: deletePostAction } = this.props;
+        const { id } = this.props;
 
-        deletePostAction(id);
+        this.props.actions.deletePost(id);
     };
 
     /**
@@ -45,9 +44,9 @@ class Post extends Component {
      * @return {void}
      */
     _likePost = () => {
-        const { likePost: likePostAction, id } = this.props;
+        const { id } = this.props;
 
-        likePostAction(id);
+        this.props.actions.likePost(id);
     };
 
     render () {
@@ -69,8 +68,8 @@ const mapStateToProps = (state) => ({
     profile: state.profile
 });
 
-const mapDispatchToProps =
-    (dispatch) => bindActionCreators(
-        { likePost, deletePost }, dispatch);
+const mapDispatchToProps = (dispatch) => ({
+    actions: bindActionCreators({ ...postsActions }, dispatch)
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Post);
