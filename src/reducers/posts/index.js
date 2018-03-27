@@ -5,7 +5,7 @@ import {
     LIKE_POST_SUCCESS,
     START_POSTS_FETCHING,
     STOP_POSTS_FETCHING
-} from '../../actions/posts/type';
+} from '../../actions/posts/types';
 
 const initialState = { data: [], isFetching: false, error: '' };
 

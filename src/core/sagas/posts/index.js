@@ -3,8 +3,11 @@ import { takeEvery, select } from 'redux-saga/effects';
 
 // Instruments
 import {
-    CREATE_POST, DELETE_POST, FETCH_POSTS, LIKE_POST
-} from '../../../actions/posts/type';
+    CREATE_POST,
+    DELETE_POST,
+    FETCH_POSTS,
+    LIKE_POST
+} from '../../../actions/posts/types';
 import { fetchPostsWorker } from './workers/fetchPosts/index';
 import { createPostWorker } from './workers/createPost/index';
 import { deletePostWorker } from './workers/deletePost';
@@ -24,7 +27,7 @@ export default {
         yield takeEvery(LIKE_POST, likePostWorker);
     },
     * watchAndLog () {
-        yield takeEvery('*', function* logger (action) {
+        yield takeEvery('*', function* (action) {
             const state = yield select();
 
             console.log('action', action);

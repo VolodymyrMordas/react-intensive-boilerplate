@@ -18,7 +18,7 @@ import {
     DELETE_POST_SUCCESS,
     DELETE_POST_START,
     DELETE_POST_STOP, LIKE_POST_START, LIKE_POST_STOP
-} from './type';
+} from './types';
 
 
 export default Object.freeze({
@@ -88,89 +88,3 @@ export default Object.freeze({
         type: STOP_POSTS_FETCHING
     })
 });
-
-// export const createPost = (msg) => async (dispatch, getState) => {
-//     const { api, token } = getState().profile;
-//
-//     const response = await fetch(api, {
-//         method:  'POST',
-//         headers: {
-//             'Content-Type':  'application/json',
-//             'Authorization': token
-//         },
-//         body: JSON.stringify({ comment: msg })
-//     });
-//
-//     if (response.status !== 200) {
-//         dispatch({
-//             type: CREATE_POST_FAIL
-//         });
-//     }
-//
-//     const { data } = await response.json();
-//
-//     dispatch({
-//         type:    CREATE_POST,
-//         payload: data
-//     });
-// };
-//
-// /**
-//  *
-//  * @param {string} id - posts id
-//  * @returns {function(*, *)} delete posts action creator
-//  */
-//
-// /**
-//  * fetch posts action creator
-//  *
-//  * @return {function(*, *)} fetch posts action creator
-//  */
-// export const fetchPosts = () => async (dispatch, getState) => {
-//     const { api } = getState().profile;
-//
-//     const response = await fetch(api);
-//
-//     if (response.status !== 200) {
-//         throw new Error(`error:${response.message}`);
-//     }
-//
-//     const data = await response.json();
-//
-//     const { data: posts } = data;
-//
-//     dispatch({
-//         type:    FETCH_POSTS,
-//         payload: posts
-//     });
-// };
-//
-// /**
-//  * like/dislike posts action creator
-//  *
-//  * @param {string} id - posts id
-//  *
-//  * @return {function(*, *)} action creator
-//  */
-// export const likePost = (id) => async (dispatch, getState) => {
-//     const { api, token } = getState().profile;
-//
-//     const response = await fetch(`${api}/${id}`, {
-//         method:  'PUT',
-//         headers: {
-//             'Content-Type':  'application/json',
-//             'Authorization': token
-//         }
-//     });
-//
-//     if (response.status !== 200) {
-//         dispatch({
-//             type:    LIKE_POST_FAIL,
-//             payload: id
-//         });
-//     }
-//
-//     const { data } =  await response.json();
-//
-//     dispatch({ type: LIKE_POST, payload: { postId: id, data }});
-// };
