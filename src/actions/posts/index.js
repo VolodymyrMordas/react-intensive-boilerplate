@@ -17,7 +17,7 @@ import {
     DELETE_POST_FAIL,
     DELETE_POST_SUCCESS,
     DELETE_POST_START,
-    DELETE_POST_STOP
+    DELETE_POST_STOP, LIKE_POST_START, LIKE_POST_STOP
 } from './type';
 
 
@@ -65,6 +65,12 @@ export default Object.freeze({
     }),
     likePostFail: (payload) => ({
         type: LIKE_POST_FAIL, payload
+    }),
+    likePostStart: (payload) => ({
+        type: LIKE_POST_START, payload
+    }),
+    likePostStop: () => ({
+        type: LIKE_POST_STOP
     }),
     startPostsFetching: () => ({
         type: START_POSTS_FETCHING
@@ -114,31 +120,6 @@ export default Object.freeze({
 //  * @param {string} id - posts id
 //  * @returns {function(*, *)} delete posts action creator
 //  */
-// export const deletePost = (id) => async (dispatch, getState) => {
-//     const { api, token } = getState().profile;
-//     const response = await fetch(`${api}/${id}`, {
-//         method:  'DELETE',
-//         headers: {
-//             'Content-Type':  'application/json',
-//             'Authorization': token
-//         }
-//     });
-//
-//     if (response.status !== 200) {
-//         const { message } = await response.json();
-//
-//         dispatch({
-//             type:    DELETE_POST_FAIL,
-//             payload: message
-//         });
-//
-//     } else {
-//         dispatch({
-//             type:    DELETE_POST,
-//             payload: id
-//         });
-//     }
-// };
 //
 // /**
 //  * fetch posts action creator

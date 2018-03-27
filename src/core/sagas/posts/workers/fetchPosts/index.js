@@ -11,7 +11,7 @@ export function* fetchPostsWorker () {
     try {
         yield put(postsActions.startPostsFetching());
 
-        const { posts, profile } = yield selectExp;
+        const { profile } = yield selectExp;
 
         const response = yield call(fetch, profile.api);
 

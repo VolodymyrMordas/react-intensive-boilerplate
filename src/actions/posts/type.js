@@ -18,5 +18,7 @@ export const FETCH_POSTS_ERROR = 'FETCH_POSTS_ERROR';
 
 
 export const LIKE_POST = 'LIKE_POST';
+export const LIKE_POST_START = 'LIKE_POST_START';
+export const LIKE_POST_STOP= 'LIKE_POST_STOP';
 export const LIKE_POST_SUCCESS = 'LIKE_POST_SUCCESS';
 export const LIKE_POST_FAIL = 'LIKE_POST_FAIL';

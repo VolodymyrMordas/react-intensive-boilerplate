@@ -10,7 +10,6 @@ import {
 const initialState = { data: [], isFetching: false, error: '' };
 
 export default (state = initialState, { type, payload }) => {
-    console.log(payload);
     switch (type) {
         case CREATE_POST_SUCCESS:
             return Object.assign({}, state, {
@@ -18,7 +17,7 @@ export default (state = initialState, { type, payload }) => {
             });
         case LIKE_POST_SUCCESS:
             return Object.assign({}, state, {
-                data: [...state, ...payload.data]
+                data: [...state.data, payload]
             });
         case FETCH_POSTS_SUCCESS:
             return Object.assign({}, state, {
